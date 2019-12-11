@@ -125,12 +125,20 @@ class NeuralNetwork(object):
         #print("hidden error: {}".format(hidden_error))
 
         # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
-        hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
-        hidden_error_term = np.sum(hidden_error_term)
+        #hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
+        hidden_error_term_part = np.dot(hidden_outputs, (1 - hidden_outputs.T))
+        hidden_error_term = np.dot(hidden_error, hidden_error_term_part)
+        #hidden_error_term = np.sum(hidden_error_term)
         #print("hidden_error_term: {}".format(hidden_error_term)) # hidden_error_term shape: (2, 2)
 
         # Weight step (input to hidden)
-        delta_weights_i_h += hidden_error_term * X[:, None]
+        #delta_weights_i_h += hidden_error_term * X[:, None]
+        delta_weights_i_h += np.dot(hidden_error_term, X[:, None].T).T
+        #delta_weights_i_h += np.dot(hidden_error_term, X.T)
+
+        #print("old way: {}".format(hidden_error_term * X[:, None]));
+        #print("new way: {}".format(np.matmul(hidden_error_term.reshape(-1, 1), X[:, None])));
+
         # Weight step (hidden to output)
 
         return delta_weights_i_h, delta_weights_h_o
@@ -178,7 +186,7 @@ class NeuralNetwork(object):
 #########################################################
 # Set your hyperparameters here
 ##########################################################
-iterations = 1000
-learning_rate = 0.5
-hidden_nodes = 20
+iterations = 600
+learning_rate = 0.4
+hidden_nodes = 25
 output_nodes = 1

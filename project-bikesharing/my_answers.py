@@ -113,23 +113,19 @@ class NeuralNetwork(object):
 
         delta_weights_h_o += output_error_term * hidden_outputs.T
 
-        # delta_weights_h_o =  np.array([[ 0.07275328],
-        #                                [ 0.06827061]])  #TODO - this is not correct.  delete this line!
-
-        # print("delta_weights_h_o:          {}{}".format(delta_weights_h_o, "\n"))
-
-
-
         #print("self.weights_hidden_to_output:          {}".format(self.weights_hidden_to_output))
-        hidden_error = np.dot(self.weights_hidden_to_output, output_error_term)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
-        #print("hidden error: {}".format(hidden_error))
+        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
+        print("hidden error: {}".format(hidden_error))
+        print("hidden_outputs: {}".format(hidden_outputs))
 
         # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
-        #hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
-        hidden_error_term_part = np.dot(hidden_outputs, (1 - hidden_outputs.T))
-        hidden_error_term = np.dot(hidden_error, hidden_error_term_part)
+        hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
+
+        #hidden_error_term_part = np.dot(hidden_outputs, (1 - hidden_outputs.T))
+        #hidden_error_term = np.dot(hidden_error, hidden_error_term_part)
+
         #hidden_error_term = np.sum(hidden_error_term)
-        #print("hidden_error_term: {}".format(hidden_error_term)) # hidden_error_term shape: (2, 2)
+        print("hidden_error_term: {}".format(hidden_error_term)) # hidden_error_term shape: (2, 2)
 
         # Weight step (input to hidden)
         #delta_weights_i_h += hidden_error_term * X[:, None]
@@ -155,9 +151,10 @@ class NeuralNetwork(object):
         '''
 
         #self.weights_hidden_to_output += None # update hidden-to-output weights with gradient descent step
-        self.weights_hidden_to_output += learning_rate * delta_weights_h_o/n_records  # update hidden-to-output weights with gradient descent step
+        self.weights_hidden_to_output += self.lr * delta_weights_h_o/n_records  # update hidden-to-output weights with gradient descent step
+
         #self.weights_input_to_hidden += None # update input-to-hidden weights with gradient descent step
-        self.weights_input_to_hidden += learning_rate * delta_weights_i_h/n_records  # update input-to-hidden weights with gradient descent step
+        self.weights_input_to_hidden += self.lr * delta_weights_i_h/n_records  # update input-to-hidden weights with gradient descent step
 
     def run(self, features):
         ''' Run a forward pass through the network with input features 

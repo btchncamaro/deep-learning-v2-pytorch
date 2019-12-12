@@ -56,21 +56,14 @@ class NeuralNetwork(object):
         '''
         #### Implement the forward pass here ####
         ### Forward pass ###
-        # TODO: Hidden layer - Replace these values with your calculations.
-        #hidden_inputs = None # signals into hidden layer
+        # DONE: Hidden layer - Replace these values with your calculations.
         hidden_inputs = np.dot(X, self.weights_input_to_hidden)
 
         #hidden_outputs = None # signals from hidden layer
         hidden_outputs = np.array([[self.activation_function(i) for i in hidden_inputs]])  # signals from hidden layer
-        #print("hidden_outputs: {}".format(hidden_outputs))
 
-        # TODO: Output layer - Replace these values with your calculations.
-        #final_inputs = None # signals into final output layer
+        # DONE: Output layer - Replace these values with your calculations.
         final_inputs = np.dot(hidden_outputs, self.weights_hidden_to_output)
-        #print("final_inputs: {}".format(final_inputs))
-
-        #final_outputs = None # signals from final output layer
-        #final_outputs = self.activation_function(final_inputs)
         final_outputs = final_inputs   #do not use activation function for final output.  Do not use derivative for this during backprob.
         
         return final_outputs, hidden_outputs
@@ -97,45 +90,22 @@ class NeuralNetwork(object):
         #### Implement the backward pass here ####
         ### Backward pass ###
 
-        # TODO: Output error - Replace this value with your calculations.
+        # DONE: Output error - Replace this value with your calculations.
         error = y - final_outputs  # Output layer error is the difference between desired target and actual output.
-        #print("Error: {}".format(error))
 
-        # TODO: Backpropagated error terms - Replace these values with your calculations.
-        #output_error_term = error * final_outputs * (1 - final_outputs)
+        # DONE: Backpropagated error terms - Replace these values with your calculations.
         output_error_term = error #not using activation function for error, so no derivative needed here.
 
-        # TODO: Calculate the hidden layer's contribution to the error
-        # print("\n\ndelta_weights_h_o:          {}".format(delta_weights_h_o))
-        # print("output_error_term:          {}".format(output_error_term))
-        # print("output_error_term_reshaped: {}".format(output_error_term_reshaped))
-        # print("hidden_outputs:             {}".format(hidden_outputs))
-
-        delta_weights_h_o += output_error_term * hidden_outputs.T
-
-        #print("self.weights_hidden_to_output:          {}".format(self.weights_hidden_to_output))
-        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
-        print("hidden error: {}".format(hidden_error))
-        print("hidden_outputs: {}".format(hidden_outputs))
-
-        # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
-        hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
-
-        #hidden_error_term_part = np.dot(hidden_outputs, (1 - hidden_outputs.T))
-        #hidden_error_term = np.dot(hidden_error, hidden_error_term_part)
-
-        #hidden_error_term = np.sum(hidden_error_term)
-        print("hidden_error_term: {}".format(hidden_error_term)) # hidden_error_term shape: (2, 2)
-
-        # Weight step (input to hidden)
-        #delta_weights_i_h += hidden_error_term * X[:, None]
-        delta_weights_i_h += np.dot(hidden_error_term, X[:, None].T).T
-        #delta_weights_i_h += np.dot(hidden_error_term, X.T)
-
-        #print("old way: {}".format(hidden_error_term * X[:, None]));
-        #print("new way: {}".format(np.matmul(hidden_error_term.reshape(-1, 1), X[:, None])));
+        # DONE: Calculate the hidden layer's contribution to the error
 
         # Weight step (hidden to output)
+        delta_weights_h_o += output_error_term * hidden_outputs.T
+
+        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
+        hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
+
+        # Weight step (input to hidden)
+        delta_weights_i_h += np.dot(hidden_error_term, X[:, None].T).T
 
         return delta_weights_i_h, delta_weights_h_o
 
@@ -150,10 +120,7 @@ class NeuralNetwork(object):
 
         '''
 
-        #self.weights_hidden_to_output += None # update hidden-to-output weights with gradient descent step
         self.weights_hidden_to_output += self.lr * delta_weights_h_o/n_records  # update hidden-to-output weights with gradient descent step
-
-        #self.weights_input_to_hidden += None # update input-to-hidden weights with gradient descent step
         self.weights_input_to_hidden += self.lr * delta_weights_i_h/n_records  # update input-to-hidden weights with gradient descent step
 
     def run(self, features):
@@ -165,16 +132,12 @@ class NeuralNetwork(object):
         '''
         
         #### Implement the forward pass here ####
-        # TODO: Hidden layer - replace these values with the appropriate calculations.
-        #hidden_inputs = None # signals into hidden layer
-        hidden_inputs = np.dot(features, self.weights_input_to_hidden)  ### TODO: - dot or matmul?
-        #hidden_outputs = None # signals from hidden layer
+        # DONE: Hidden layer - replace these values with the appropriate calculations.
+        hidden_inputs = np.dot(features, self.weights_input_to_hidden)
         hidden_outputs = np.array([self.activation_function(i) for i in hidden_inputs])
         
-        # TODO: Output layer - Replace these values with the appropriate calculations.
-        #final_inputs = None # signals into final output layer
+        # DONE: Output layer - Replace these values with the appropriate calculations.
         final_inputs = np.dot(hidden_outputs, self.weights_hidden_to_output)
-        #final_outputs = None # signals from final output layer
         final_outputs = final_inputs  #np.sum(final_inputs)
 
         return final_outputs

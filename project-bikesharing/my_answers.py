@@ -146,7 +146,26 @@ class NeuralNetwork(object):
 #########################################################
 # Set your hyperparameters here
 ##########################################################
-iterations = 600
-learning_rate = 0.4
+# iterations = 5000
+# learning_rate = 0.15
+# hidden_nodes = 25
+# output_nodes = 1
+#Progress: 100.0% ... Training loss: 0.221 ... Validation loss: 0.387
+
+# iterations = 5000
+# learning_rate = 0.2
+# hidden_nodes = 25
+# output_nodes = 1
+# Progress: 100.0% ... Training loss: 0.180 ... Validation loss: 0.321
+
+# iterations = 8000
+# learning_rate = 0.2
+# hidden_nodes = 25
+# output_nodes = 1
+# Progress: 100.0% ... Training loss: 0.085 ... Validation loss: 0.197
+
+iterations = 8000
+learning_rate = 0.25
 hidden_nodes = 25
 output_nodes = 1
+#Progress: 100.0% ... Training loss: 0.072 ... Validation loss: 0.168

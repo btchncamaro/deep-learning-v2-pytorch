@@ -57,13 +57,13 @@ class NeuralNetwork(object):
         #### Implement the forward pass here ####
         ### Forward pass ###
         # DONE: Hidden layer - Replace these values with your calculations.
-        hidden_inputs = np.dot(X, self.weights_input_to_hidden)
+        hidden_inputs = np.matmul(X, self.weights_input_to_hidden)
 
         #hidden_outputs = None # signals from hidden layer
-        hidden_outputs = np.array([[self.activation_function(i) for i in hidden_inputs]])  # signals from hidden layer
+        hidden_outputs = self.activation_function(hidden_inputs)  # signals from hidden layer
 
         # DONE: Output layer - Replace these values with your calculations.
-        final_inputs = np.dot(hidden_outputs, self.weights_hidden_to_output)
+        final_inputs = np.matmul(hidden_outputs, self.weights_hidden_to_output)
         final_outputs = final_inputs   #do not use activation function for final output.  Do not use derivative for this during backprob.
         
         return final_outputs, hidden_outputs
@@ -99,13 +99,13 @@ class NeuralNetwork(object):
         # DONE: Calculate the hidden layer's contribution to the error
 
         # Weight step (hidden to output)
-        delta_weights_h_o += output_error_term * hidden_outputs.T
+        delta_weights_h_o += (output_error_term * hidden_outputs.T)[:, None]
 
-        hidden_error = np.dot(output_error_term, self.weights_hidden_to_output.T)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
+        hidden_error = np.matmul(output_error_term, self.weights_hidden_to_output.T)  # hidden error shape: (2, 1), hidden_outputs shape: (1, 2)
         hidden_error_term = hidden_error.T * hidden_outputs.T * (1 - hidden_outputs.T)
 
         # Weight step (input to hidden)
-        delta_weights_i_h += np.dot(hidden_error_term, X[:, None].T).T
+        delta_weights_i_h += np.matmul(hidden_error_term[:, None], X[:, None].T).T
 
         return delta_weights_i_h, delta_weights_h_o
 
